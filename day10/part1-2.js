@@ -1,9 +1,7 @@
 let fs = require('fs')
 let input = fs.readFileSync('input','utf-8').trim().split('\n')
 
-let size = 100
 let map = {}
-
 input.forEach((s,i)=>{
   map[i] = {}
   let regex = /<[\ ]*([\-]?\d+)\,[\ ]*([\-]?\d+)>/g
@@ -13,7 +11,6 @@ input.forEach((s,i)=>{
   m = regex.exec(s).map(Number)
   map[i].v = {x: m[1], y: m[2]}
 })
-
 
 function goodMap(map){
   let minx = Infinity
@@ -39,10 +36,8 @@ function goodMap(map){
 
   maxx += -minx+1
   maxy += -miny+1
-  minx += -minx
-  miny += -miny
 
-  return {map: map, minx: minx, miny: miny, maxx: maxx, maxy: maxy}
+  return {map: map, maxx: maxx, maxy: maxy}
 }
 
 function tick(map){
@@ -62,10 +57,10 @@ function has(map, point){
   return st
 }
 
-function print(map, minx, miny, maxx, maxy){
-  for(let i = minx; i < maxx; i++){
+function print(map, maxx, maxy){
+  for(let i = 0; i < maxx; i++){
     let line = ''
-    for(let j = miny; j < maxy; j++){
+    for(let j = 0; j < maxy; j++){
       if(has(map, {x: i, y: j}))
         line += '#'
       else
@@ -76,15 +71,15 @@ function print(map, minx, miny, maxx, maxy){
 }
 
 for(let i = 1; true; i++){
-  let minx, miny, maxx, maxy
+  let maxx, maxy
   map = tick(map)
   let gMap = goodMap(map)
   map = gMap.map
   maxx = gMap.maxx
   maxy = gMap.maxy
-  if(maxy > 10) continue
+  if(maxy !== 10) continue
   
-  print(map, 0, 0, maxx, maxy)
+  print(map, maxx, maxy)
   console.log(i)
   return
 }
